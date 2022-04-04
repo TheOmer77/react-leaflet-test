@@ -30,16 +30,9 @@ const FreeDraw = ({ drawing, onModeChange = () => {}, onDraw = () => {} }) => {
     [onDraw, onModeChange]
   );
 
-  const handleModeChange = useCallback((event) => {
-    console.log('mode changed to', event.mode);
-  }, []);
-
   const handlers = useMemo(
-    () => ({
-      markers: handleMarkersDraw,
-      mode: handleModeChange,
-    }),
-    [handleMarkersDraw, handleModeChange]
+    () => ({ markers: handleMarkersDraw }),
+    [handleMarkersDraw]
   );
 
   const handleEscapeKey = useCallback((event) => {
