@@ -43,7 +43,15 @@ const Map = () => {
         onVisibilityChange={setGeoJSONVisible}
         onDataChange={setGeoJsonData}
       />
-      {geoJsonVisible && <UpdatingGeoJSON data={geoJsonData} />}
+      {geoJsonVisible && (
+        <UpdatingGeoJSON
+          data={geoJsonData}
+          eventHandlers={{
+            click: (event) =>
+              alert(JSON.stringify(event?.propagatedFrom?.feature)),
+          }}
+        />
+      )}
     </MapContainer>
   );
 };
