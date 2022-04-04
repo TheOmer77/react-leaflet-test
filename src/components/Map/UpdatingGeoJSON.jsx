@@ -6,10 +6,9 @@ const UpdatingGeoJSON = ({ data, ...props }) => {
   const geoJsonRef = useRef();
 
   useEffect(() => {
-    console.log(geoJsonRef.current);
     geoJsonRef.current.addData(data);
 
-    return () => geoJsonRef.current.clearLayers();
+    return () => geoJsonRef.current && geoJsonRef.current.clearLayers();
   }, [data]);
 
   return <GeoJSON ref={geoJsonRef} {...props} />;
