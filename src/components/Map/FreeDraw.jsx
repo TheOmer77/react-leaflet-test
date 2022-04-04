@@ -17,6 +17,7 @@ const FreeDraw = ({ drawing, onModeChange = () => {}, onDraw = () => {} }) => {
   const handleMarkersDraw = useCallback(
     (event) => {
       if (event.eventType === 'create') {
+        if (event.latLngs.length < 1) return;
         // Instantly clear the drawn polygon, which is passed to onDraw
         event.target.clear();
 
