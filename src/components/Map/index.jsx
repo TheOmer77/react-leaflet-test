@@ -1,22 +1,33 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { MapContainer, TileLayer } from 'react-leaflet';
 import MinimapControl from './MinimapControl';
 import FreeDraw from './FreeDraw';
 import GeoJSONControl from './GeoJSONControl';
 import UpdatingGeoJSON from './UpdatingGeoJSON';
 
-import { testGeoJsonOne, testGeoJsonTwo } from '../../consts/testGeoJson';
+import { testGeoJsonOne } from '../../consts/testGeoJson';
 
 import 'leaflet/dist/leaflet.css';
 
 const Map = () => {
-  const [geoJSONshown, setGeoJSONshown] = useState(true),
-    [useGeoJsonTwo, setUseGeoJsonTwo] = useState(false);
+  const [geoJsonVisible, setGeoJSONVisible] = useState(true),
+    [geoJsonData, setGeoJsonData] = useState(testGeoJsonOne);
+
+  const handleDraw = useCallback(
+    /** @param {import("leaflet").Polygon} polygon */
+    (polygon) =>
+      setGeoJsonData((prev) => ({
+        ...prev,
+        features: [...prev.features, polygon.toGeoJSON()],
+      })),
+    []
+  );
 
   return (
     <MapContainer
       id='map'
       attributionControl={false}
+      doubleClickZoom={false}
       center={[51.505456972844144, -0.1302909851074219]}
       zoom={14}
     >
@@ -25,19 +36,14 @@ const Map = () => {
         url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
       />
       <MinimapControl position='topright' />
-      <FreeDraw position='bottomright' />
+      <FreeDraw position='bottomright' onDraw={handleDraw} />
       <GeoJSONControl
         position='bottomright'
-        isShown={geoJSONshown}
-        useGeoJsonTwo={useGeoJsonTwo}
-        onVisibilityChange={setGeoJSONshown}
-        onGeoJsonChange={setUseGeoJsonTwo}
+        isShown={geoJsonVisible}
+        onVisibilityChange={setGeoJSONVisible}
+        onDataChange={setGeoJsonData}
       />
-      {geoJSONshown && (
-        <UpdatingGeoJSON
-          data={useGeoJsonTwo ? testGeoJsonTwo : testGeoJsonOne}
-        />
-      )}
+      {geoJsonVisible && <UpdatingGeoJSON data={geoJsonData} />}
     </MapContainer>
   );
 };
