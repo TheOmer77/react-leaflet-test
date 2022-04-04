@@ -1,33 +1,34 @@
 import { useRef, useCallback, useMemo, useEffect } from 'react';
 import { Polygon } from 'leaflet';
 import FreeDrawComponent, { CREATE, NONE } from 'react-leaflet-freedraw';
-import POSITION_CLASSES from '../../consts/positionClasses';
 
 /**
  * @param {{
- *  position?: keyof POSITION_CLASSES;
  *  drawing?: boolean;
  *  deleting?: boolean;
  *  onModeChange?: (mode?: import('.').Mode) => void;
  *  onDraw?: (polygon: Polygon, id?: number) => void;
  * }}
  */
-const FreeDraw = ({ drawing, onModeChange, onDraw }) => {
+const FreeDraw = ({ drawing, onModeChange = () => {}, onDraw = () => {} }) => {
   /** @type {React.MutableRefObject<import("leaflet-freedraw").default>} */
   const freedrawRef = useRef(null);
 
-  const handleMarkersDraw = useCallback((event) => {
-    if (event.eventType === 'create') {
-      // Instantly clear the drawn polygon, which is passed to onDraw
-      event.target.clear();
+  const handleMarkersDraw = useCallback(
+    (event) => {
+      if (event.eventType === 'create') {
+        // Instantly clear the drawn polygon, which is passed to onDraw
+        event.target.clear();
 
-      const drawnPolygon = new Polygon(event.latLngs),
-        id = event.target._leaflet_id;
+        const drawnPolygon = new Polygon(event.latLngs),
+          id = event.target._leaflet_id;
 
-      if (onDraw) onDraw(drawnPolygon, id);
-      onModeChange(NONE);
-    }
-  }, []);
+        if (onDraw) onDraw(drawnPolygon, id);
+        onModeChange(NONE);
+      }
+    },
+    [onDraw, onModeChange]
+  );
 
   const handleModeChange = useCallback((event) => {
     console.log('mode changed to', event.mode);

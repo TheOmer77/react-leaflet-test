@@ -61,7 +61,11 @@ const Map = () => {
         url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
       />
       <MinimapControl position='topright' />
-      <FreeDraw drawing={mode === 'freedraw'} onDraw={handleDraw} />
+      <FreeDraw
+        drawing={mode === 'freedraw'}
+        onDraw={handleDraw}
+        onModeChange={setMode}
+      />
       <GeoJSONControl
         position='bottomright'
         showGeoJson={geoJsonVisible}
