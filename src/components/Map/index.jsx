@@ -1,6 +1,5 @@
 import { useState, useCallback } from 'react';
 import { MapContainer, TileLayer } from 'react-leaflet';
-import MinimapControl from './MinimapControl';
 import FreeDraw from './FreeDraw';
 import GeoJSONControl from './GeoJSONControl';
 import UpdatingGeoJSON from './UpdatingGeoJSON';
@@ -60,7 +59,6 @@ const Map = () => {
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
       />
-      <MinimapControl position='topright' />
       <FreeDraw
         drawing={mode === 'freedraw'}
         onDraw={handleDraw}
