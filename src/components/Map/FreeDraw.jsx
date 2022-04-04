@@ -10,7 +10,7 @@ import POSITION_CLASSES from '../../consts/positionClasses';
 /**
  * @param {{
  *  position?: keyof POSITION_CLASSES;
- *  onDraw?: (polygon: Polygon) => void;
+ *  onDraw?: (polygon: Polygon, id?: number) => void;
  * }}
  */
 const FreeDraw = ({ position, onDraw }) => {
@@ -25,12 +25,15 @@ const FreeDraw = ({ position, onDraw }) => {
   const freedrawRef = useRef(null);
 
   const handleMarkersDraw = useCallback((event) => {
-    setMode(NONE);
     if (event.eventType === 'create') {
       // Instantly clear the drawn polygon, which is passed to onDraw
       event.target.clear();
-      const drawnPolygon = new Polygon(event.latLngs);
-      if (onDraw) return onDraw(drawnPolygon);
+
+      const drawnPolygon = new Polygon(event.latLngs),
+        id = event.target._leaflet_id;
+
+      if (onDraw) onDraw(drawnPolygon, id);
+      setMode(NONE);
     }
   }, []);
 

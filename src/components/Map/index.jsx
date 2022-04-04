@@ -14,11 +14,21 @@ const Map = () => {
     [geoJsonData, setGeoJsonData] = useState(testGeoJsonOne);
 
   const handleDraw = useCallback(
-    /** @param {import("leaflet").Polygon} polygon */
-    (polygon) =>
+    /**
+     * @param {import("leaflet").Polygon} polygon
+     * @param {number} id
+     */
+    (polygon, id) =>
       setGeoJsonData((prev) => ({
         ...prev,
-        features: [...prev.features, polygon.toGeoJSON()],
+        features: [
+          ...prev.features,
+          {
+            id,
+            ...polygon.toGeoJSON(),
+            properties: { name: `New feature ${id}` },
+          },
+        ],
       })),
     []
   );
