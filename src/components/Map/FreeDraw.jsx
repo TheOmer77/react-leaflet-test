@@ -12,10 +12,7 @@ import POSITION_CLASSES from '../../consts/positionClasses';
  *  onDraw?: (polygon: Polygon, id?: number) => void;
  * }}
  */
-const FreeDraw = ({ position, drawing, deleting, onModeChange, onDraw }) => {
-  const positionClass =
-    (position && POSITION_CLASSES[position]) || POSITION_CLASSES.topright;
-
+const FreeDraw = ({ drawing, onModeChange, onDraw }) => {
   /** @type {React.MutableRefObject<import("leaflet-freedraw").default>} */
   const freedrawRef = useRef(null);
 
@@ -57,31 +54,11 @@ const FreeDraw = ({ position, drawing, deleting, onModeChange, onDraw }) => {
   }, [handleEscapeKey]);
 
   return (
-    <>
-      <div className={positionClass}>
-        <div className='leaflet-control list'>
-          <button
-            className='list-item'
-            disabled={drawing}
-            onClick={() => onModeChange && onModeChange('freedraw')}
-          >
-            {drawing ? 'Drawing now lol' : 'Start drawing'}
-          </button>
-          <button
-            className='list-item'
-            disabled={deleting}
-            onClick={() => onModeChange && onModeChange('delete')}
-          >
-            {deleting ? 'Deleting now lol' : 'Delete stuff'}
-          </button>
-        </div>
-      </div>
-      <FreeDrawComponent
-        mode={drawing ? CREATE : NONE}
-        eventHandlers={handlers}
-        ref={freedrawRef}
-      />
-    </>
+    <FreeDrawComponent
+      mode={drawing ? CREATE : NONE}
+      eventHandlers={handlers}
+      ref={freedrawRef}
+    />
   );
 };
 
