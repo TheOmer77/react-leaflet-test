@@ -1,38 +1,43 @@
 import POSITION_CLASSES from '../../consts/positionClasses';
+import { testGeoJsonOne, testGeoJsonTwo } from '../../consts/testGeoJson';
 
 const GeoJSONControl = ({
   position,
   isShown,
-  useGeoJsonTwo,
   onVisibilityChange = () => {},
-  onGeoJsonChange = () => {},
+  onDataChange = () => {},
 }) => {
   const positionClass =
     (position && POSITION_CLASSES[position]) || POSITION_CLASSES.topright;
 
   return (
-    <div className={positionClass} style={{ marginBlockEnd: '3rem' }}>
-      <div
-        className='leaflet-control leaflet-bar'
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          width: 120,
-          backgroundColor: 'white',
-        }}
-      >
+    <div className={positionClass} style={{ marginBlockEnd: '5rem' }}>
+      <div className='leaflet-control list'>
         <button
+          className='list-item'
           onClick={(event) => {
             event.stopPropagation();
             onVisibilityChange(!isShown);
           }}
-        >{`${isShown ? 'hide' : 'show'} geojson`}</button>
+        >{`${isShown ? 'Hide' : 'Show'} GeoJSON`}</button>
         <button
+          className='list-item'
           onClick={(event) => {
             event.stopPropagation();
-            onGeoJsonChange(!useGeoJsonTwo);
+            onDataChange(testGeoJsonOne);
           }}
-        >{`use geojson ${useGeoJsonTwo ? 'one' : 'two'}`}</button>
+        >
+          Use GeoJSON one
+        </button>
+        <button
+          className='list-item'
+          onClick={(event) => {
+            event.stopPropagation();
+            onDataChange(testGeoJsonTwo);
+          }}
+        >
+          Use GeoJSON two
+        </button>
       </div>
     </div>
   );
