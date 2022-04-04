@@ -1,25 +1,20 @@
-import { useState, useRef, useCallback, useMemo, useEffect } from 'react';
+import { useRef, useCallback, useMemo, useEffect } from 'react';
 import { Polygon } from 'leaflet';
-import FreeDrawComponent, {
-  CREATE,
-  DELETE,
-  NONE,
-} from 'react-leaflet-freedraw';
+import FreeDrawComponent, { CREATE, NONE } from 'react-leaflet-freedraw';
 import POSITION_CLASSES from '../../consts/positionClasses';
 
 /**
  * @param {{
  *  position?: keyof POSITION_CLASSES;
+ *  drawing?: boolean;
+ *  deleting?: boolean;
+ *  onModeChange?: (mode?: import('.').Mode) => void;
  *  onDraw?: (polygon: Polygon, id?: number) => void;
  * }}
  */
-const FreeDraw = ({ position, onDraw }) => {
+const FreeDraw = ({ position, drawing, deleting, onModeChange, onDraw }) => {
   const positionClass =
     (position && POSITION_CLASSES[position]) || POSITION_CLASSES.topright;
-
-  const [mode, setMode] = useState(NONE);
-  const isDrawing = mode === CREATE,
-    isDeleting = mode === DELETE;
 
   /** @type {React.MutableRefObject<import("leaflet-freedraw").default>} */
   const freedrawRef = useRef(null);
@@ -33,7 +28,7 @@ const FreeDraw = ({ position, onDraw }) => {
         id = event.target._leaflet_id;
 
       if (onDraw) onDraw(drawnPolygon, id);
-      setMode(NONE);
+      onModeChange(NONE);
     }
   }, []);
 
@@ -67,22 +62,22 @@ const FreeDraw = ({ position, onDraw }) => {
         <div className='leaflet-control list'>
           <button
             className='list-item'
-            disabled={isDrawing}
-            onClick={() => setMode(CREATE)}
+            disabled={drawing}
+            onClick={() => onModeChange && onModeChange('freedraw')}
           >
-            {isDrawing ? 'Drawing now lol' : 'Start drawing'}
+            {drawing ? 'Drawing now lol' : 'Start drawing'}
           </button>
           <button
             className='list-item'
-            disabled={isDeleting}
-            onClick={() => setMode(DELETE)}
+            disabled={deleting}
+            onClick={() => onModeChange && onModeChange('delete')}
           >
-            {isDeleting ? 'Deleting now lol' : 'Delete stuff'}
+            {deleting ? 'Deleting now lol' : 'Delete stuff'}
           </button>
         </div>
       </div>
       <FreeDrawComponent
-        mode={mode}
+        mode={drawing ? CREATE : NONE}
         eventHandlers={handlers}
         ref={freedrawRef}
       />

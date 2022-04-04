@@ -9,8 +9,14 @@ import { testGeoJsonOne } from '../../consts/testGeoJson';
 
 import 'leaflet/dist/leaflet.css';
 
+/**
+ * @typedef { null | 'freedraw' | 'delete' } Mode
+ */
+
 const Map = () => {
-  const [geoJsonVisible, setGeoJSONVisible] = useState(true),
+  /** @type {[Mode, React.Dispatch<Mode>]} */
+  const [mode, setMode] = useState(null),
+    [geoJsonVisible, setGeoJSONVisible] = useState(true),
     [geoJsonData, setGeoJsonData] = useState(testGeoJsonOne);
 
   const handleDraw = useCallback(
@@ -33,6 +39,15 @@ const Map = () => {
     []
   );
 
+  const handleDelete = useCallback(
+    (id) =>
+      setGeoJsonData((prev) => ({
+        ...prev,
+        features: prev.features.filter((feature) => feature.id !== id),
+      })),
+    []
+  );
+
   return (
     <MapContainer
       id='map'
@@ -46,7 +61,13 @@ const Map = () => {
         url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
       />
       <MinimapControl position='topright' />
-      <FreeDraw position='bottomright' onDraw={handleDraw} />
+      <FreeDraw
+        position='bottomright'
+        drawing={mode === 'freedraw'}
+        deleting={mode === 'delete'}
+        onDraw={handleDraw}
+        onModeChange={setMode}
+      />
       <GeoJSONControl
         position='bottomright'
         isShown={geoJsonVisible}
@@ -57,8 +78,17 @@ const Map = () => {
         <UpdatingGeoJSON
           data={geoJsonData}
           eventHandlers={{
-            click: (event) =>
-              alert(JSON.stringify(event?.propagatedFrom?.feature)),
+            click: (event) => {
+              switch (mode) {
+                case 'freedraw':
+                  return;
+                case 'delete':
+                  setMode(null);
+                  return handleDelete(event?.propagatedFrom?.feature?.id);
+                default:
+                  return alert(JSON.stringify(event?.propagatedFrom?.feature));
+              }
+            },
           }}
         />
       )}
