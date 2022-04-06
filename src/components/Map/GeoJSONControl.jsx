@@ -1,5 +1,16 @@
+import { useMemo, useCallback } from 'react';
+
 import POSITION_CLASSES from '../../consts/positionClasses';
 import { testGeoJsonOne, testGeoJsonTwo } from '../../consts/testGeoJson';
+
+/**
+ * @typedef {{
+ *  id: string;
+ *  label: string;
+ *  onClick: import('react').MouseEventHandler<HTMLButtonElement>;
+ *  disabled?: boolean;
+ * }} ListItem
+ */
 
 /**
  * @param {{
@@ -22,52 +33,75 @@ const GeoJSONControl = ({
   const positionClass =
     (position && POSITION_CLASSES[position]) || POSITION_CLASSES.topright;
 
+  const list = useCallback(
+    /** @param {ListItem[]} listItems */
+    (listItems) => (
+      <div className='list'>
+        {listItems.map(({ id, label, onClick, disabled }) => (
+          <button
+            key={id}
+            id={`listItem-${id}`}
+            disabled={disabled}
+            className='list-item'
+            onClick={(event) => {
+              event.stopPropagation();
+              onClick(event);
+            }}
+          >
+            {label}
+          </button>
+        ))}
+      </div>
+    ),
+    []
+  );
+
+  const geoJsonItems = useMemo(
+    /** @type {() => ListItem[]} */
+    () => [
+      {
+        id: 'toggleGeoJson',
+        label: `${showGeoJson ? 'Hide' : 'Show'} GeoJSON`,
+        onClick: () => onVisibilityChange(!showGeoJson),
+      },
+      {
+        id: 'useGeoJsonOne',
+        label: 'Use GeoJSON one',
+        onClick: () => onDataChange(testGeoJsonOne),
+      },
+      {
+        id: 'useGeoJsonTwo',
+        label: 'Use GeoJSON two',
+        onClick: () => onDataChange(testGeoJsonTwo),
+      },
+    ],
+    [onDataChange, onVisibilityChange, showGeoJson]
+  );
+
+  const drawItems = useMemo(
+    /** @type {() => ListItem[]} */
+    () => [
+      {
+        id: 'freedraw',
+        label: mode === 'freedraw' ? 'Drawing now lol' : 'Freedraw',
+        disabled: mode === 'freedraw',
+        onClick: () => onModeChange && onModeChange('freedraw'),
+      },
+      {
+        id: 'delete',
+        label: mode === 'delete' ? 'Deleting now lol' : 'Delete',
+        disabled: mode === 'delete',
+        onClick: () => onModeChange && onModeChange('delete'),
+      },
+    ],
+    [mode, onModeChange]
+  );
+
   return (
     <div className={positionClass}>
-      <div className='leaflet-control'>
-        <div className='list mb-1'>
-          <button
-            className='list-item'
-            onClick={(event) => {
-              event.stopPropagation();
-              onVisibilityChange(!showGeoJson);
-            }}
-          >{`${showGeoJson ? 'Hide' : 'Show'} GeoJSON`}</button>
-          <button
-            className='list-item'
-            onClick={(event) => {
-              event.stopPropagation();
-              onDataChange(testGeoJsonOne);
-            }}
-          >
-            Use GeoJSON one
-          </button>
-          <button
-            className='list-item'
-            onClick={(event) => {
-              event.stopPropagation();
-              onDataChange(testGeoJsonTwo);
-            }}
-          >
-            Use GeoJSON two
-          </button>
-        </div>
-        <div className='list'>
-          <button
-            className='list-item'
-            disabled={mode === 'freedraw'}
-            onClick={() => onModeChange && onModeChange('freedraw')}
-          >
-            {mode === 'freedraw' ? 'Drawing now lol' : 'Freedraw'}
-          </button>
-          <button
-            className='list-item'
-            disabled={mode === 'delete'}
-            onClick={() => onModeChange && onModeChange('delete')}
-          >
-            {mode === 'delete' ? 'Deleting now lol' : 'Delete'}
-          </button>
-        </div>
+      <div className='leaflet-control list-group'>
+        {list(geoJsonItems)}
+        {list(drawItems)}
       </div>
     </div>
   );
