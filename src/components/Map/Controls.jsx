@@ -83,13 +83,31 @@ const Controls = ({
     () => [
       {
         id: 'freedraw',
-        label: mode === 'freedraw' ? 'Drawing now lol' : 'Freedraw',
+        label: mode === 'freedraw' ? 'Freedrawing lol' : 'Freedraw',
         disabled: mode === 'freedraw',
         onClick: () => onModeChange && onModeChange('freedraw'),
       },
       {
+        id: 'rectangle',
+        label: mode === 'rectangle' ? 'Drawing rectangle lol' : 'Rectangle',
+        disabled: mode === 'rectangle',
+        onClick: () => onModeChange && onModeChange('rectangle'),
+      },
+      {
+        id: 'polygon',
+        label: mode === 'polygon' ? 'Drawing polygon lol' : 'Polygon',
+        disabled: mode === 'polygon',
+        onClick: () => onModeChange && onModeChange('polygon'),
+      },
+      {
+        id: 'marker',
+        label: mode === 'marker' ? 'Placing marker lol' : 'Marker',
+        disabled: mode === 'marker',
+        onClick: () => onModeChange && onModeChange('marker'),
+      },
+      {
         id: 'delete',
-        label: mode === 'delete' ? 'Deleting now lol' : 'Delete',
+        label: mode === 'delete' ? 'Deleting stuff lol' : 'Delete',
         disabled: mode === 'delete',
         onClick: () => onModeChange && onModeChange('delete'),
       },

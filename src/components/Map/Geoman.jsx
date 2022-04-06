@@ -4,36 +4,43 @@ import '@geoman-io/leaflet-geoman-free';
 
 import '@geoman-io/leaflet-geoman-free/dist/leaflet-geoman.css';
 
+const MODES = {
+  Marker: 'Marker',
+  CircleMarker: 'CircleMarker',
+  Circle: 'Circle',
+  Line: 'Line',
+  Rectangle: 'Rectangle',
+  Polygon: 'Polygon',
+};
+
 /**
  * @param {{
+ *  controls?: import('leaflet').PM.ToolbarOptions | false;
+ *  mode?: keyof MODES;
  *  onCreate?: import('leaflet').PM.CreateEventHandler;
  * }} props
  */
-const Geoman = ({ onCreate = () => {} }) => {
+const Geoman = ({ controls = false, mode, onCreate = () => {} }) => {
   const map = useMap();
 
   useEffect(() => {
-    // TODO: Replace Geoman toolbar with custom controls
-    map.pm.addControls({
-      position: 'topleft',
-      drawPolygon: true,
-      drawRectangle: true,
-      drawCircle: true,
-      drawCircleMarker: false,
-      // TODO: Enable editing functionality while updating state
-      editControls: false,
-    });
-
     const createEventListener = (event) => onCreate(event);
     map.on('pm:create', createEventListener);
 
+    if (controls) map.pm.addControls(controls);
+
     return () => {
       map.off('pm:create', createEventListener);
-      map.pm.removeControls();
+      if (controls) map.pm.removeControls();
     };
-  }, [map, onCreate]);
+  }, [controls, map, onCreate]);
 
-  return <div></div>;
+  useEffect(() => {
+    if (Object.keys(MODES).includes(mode)) map.pm.enableDraw(mode);
+    return () => map.pm.disableDraw();
+  }, [map.pm, mode]);
+
+  return null;
 };
 
 export default Geoman;

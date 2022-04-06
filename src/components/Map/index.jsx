@@ -10,7 +10,9 @@ import { testGeoJsonOne } from '../../consts/testGeoJson';
 import 'leaflet/dist/leaflet.css';
 
 /**
- * @typedef { null | 'freedraw' | 'delete' } Mode
+ * Possible draw modes.
+ * Circle is not included because it's not supported in GeoJSON.
+ * @typedef { null | 'freedraw' | 'rectangle' | 'polygon' | 'marker' | 'delete' } Mode
  */
 
 const Map = () => {
@@ -69,9 +71,19 @@ const Map = () => {
         onModeChange={setMode}
       />
       <Geoman
+        mode={
+          mode === 'rectangle'
+            ? 'Rectangle'
+            : mode === 'polygon'
+            ? 'Polygon'
+            : mode === 'marker'
+            ? 'Marker'
+            : null
+        }
         onCreate={(event) => {
           handleDraw(event.layer, event.layer._leaflet_id);
           map && map.removeLayer(event.layer);
+          setMode(null);
         }}
       />
       <Controls

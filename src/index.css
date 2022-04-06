@@ -28,7 +28,7 @@ body {
 .list {
   display: flex;
   flex-direction: column;
-  width: 10rem;
+  width: 12rem;
   border-radius: 0.25rem;
   overflow: hidden;
 }
