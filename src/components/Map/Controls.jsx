@@ -22,7 +22,7 @@ import { testGeoJsonOne, testGeoJsonTwo } from '../../consts/testGeoJson';
  *  onDataChange?: (data: object) => void;
  * }} props
  */
-const GeoJSONControl = ({
+const Controls = ({
   position,
   showGeoJson,
   mode,
@@ -107,4 +107,4 @@ const GeoJSONControl = ({
   );
 };
 
-export default GeoJSONControl;
+export default Controls;

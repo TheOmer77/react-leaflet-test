@@ -2,7 +2,7 @@ import { useState, useCallback } from 'react';
 import { MapContainer, TileLayer } from 'react-leaflet';
 import FreeDraw from './FreeDraw';
 import Geoman from './Geoman';
-import GeoJSONControl from './GeoJSONControl';
+import Controls from './Controls';
 import UpdatingGeoJSON from './UpdatingGeoJSON';
 
 import { testGeoJsonOne } from '../../consts/testGeoJson';
@@ -74,7 +74,7 @@ const Map = () => {
           map && map.removeLayer(event.layer);
         }}
       />
-      <GeoJSONControl
+      <Controls
         position='bottomright'
         showGeoJson={geoJsonVisible}
         mode={mode}
