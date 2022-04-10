@@ -1,60 +1,53 @@
-import { useRef, useCallback, useMemo, useEffect } from 'react';
-import { Polygon } from 'leaflet';
-import FreeDrawComponent, { CREATE, NONE } from 'react-leaflet-freedraw';
+import { useState, useEffect } from 'react';
+import { useMap } from 'react-leaflet';
+import Leaflet from 'leaflet';
+import 'leaflet-freehandshapes';
+
+/** @type {import('leaflet').FreeHandShapesOptions} */
+const FREEHANDSHAPES_OPTIONS = {
+  polygon: { smoothFactor: 0.3 },
+  polyline: { smoothFactor: 0 },
+  simplify_tolerance: 0,
+};
 
 /**
  * @param {{
  *  drawing?: boolean;
- *  deleting?: boolean;
- *  onModeChange?: (mode?: import('.').Mode) => void;
- *  onDraw?: (polygon: Polygon, id?: number) => void;
- * }}
+ *  onCreate?: import('leaflet').LeafletEventHandlerFn
+ * }} props
  */
-const FreeDraw = ({ drawing, onModeChange = () => {}, onDraw = () => {} }) => {
-  /** @type {React.MutableRefObject<import("leaflet-freedraw").default>} */
-  const freedrawRef = useRef(null);
+const FreeDraw = ({ drawing = false, onCreate = () => {} }) => {
+  const map = useMap();
+  /** @type {[import('leaflet').FreeHandShapes, React.Dispatch<import('leaflet').FreeHandShapes>]} */
+  const [freeHandShapes, setFreeHandShapes] = useState(null);
 
-  const handleMarkersDraw = useCallback(
-    (event) => {
-      if (event.eventType === 'create') {
-        if (event.latLngs.length < 1) return;
-        // Instantly clear the drawn polygon, which is passed to onDraw
-        event.target.clear();
-
-        const drawnPolygon = new Polygon(event.latLngs),
-          id = event.target._leaflet_id;
-
-        if (onDraw) onDraw(drawnPolygon, id);
-        onModeChange(NONE);
-      }
-    },
-    [onDraw, onModeChange]
-  );
-
-  const handlers = useMemo(
-    () => ({ markers: handleMarkersDraw }),
-    [handleMarkersDraw]
-  );
-
-  const handleEscapeKey = useCallback((event) => {
-    // Cancel the current FreeDraw action when the escape key is pressed.
-    if (event.key === 'Escape') {
-      freedrawRef.current.cancel();
-    }
-  }, []);
-
+  // On mount
   useEffect(() => {
-    window.addEventListener('keydown', handleEscapeKey);
-    return () => window.removeEventListener('keydown', handleEscapeKey);
-  }, [handleEscapeKey]);
+    const freeHandShapes = new Leaflet.FreeHandShapes(FREEHANDSHAPES_OPTIONS);
+    setFreeHandShapes(freeHandShapes);
+    map.addLayer(freeHandShapes);
+    return () => map.removeLayer(freeHandShapes);
+  }, [map]);
 
-  return (
-    <FreeDrawComponent
-      mode={drawing ? CREATE : NONE}
-      eventHandlers={handlers}
-      ref={freedrawRef}
-    />
-  );
+  // Add layerAdd event handler
+  useEffect(() => {
+    if (!freeHandShapes) return;
+
+    const handleLayerAdd = (event) => onCreate(event);
+    freeHandShapes.on('layeradd', handleLayerAdd);
+    return () => freeHandShapes.off('layeradd', handleLayerAdd);
+  }, [freeHandShapes, onCreate]);
+
+  // On mode change
+  useEffect(() => {
+    if (freeHandShapes) {
+      freeHandShapes.setMode(drawing ? 'add' : 'view');
+      // This line fixes a touch issue on mobile Chrome
+      drawing && freeHandShapes.setMapPermissions('enable');
+    }
+  }, [freeHandShapes, drawing]);
+
+  return null;
 };
 
 export default FreeDraw;

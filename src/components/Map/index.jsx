@@ -67,8 +67,11 @@ const Map = () => {
       />
       <FreeDraw
         drawing={mode === 'freedraw'}
-        onDraw={handleDraw}
-        onModeChange={setMode}
+        onCreate={(event) => {
+          event.target.clearLayers();
+          handleDraw(event.layer, event.layer._leaflet_id);
+          setMode(null);
+        }}
       />
       <Geoman
         mode={
