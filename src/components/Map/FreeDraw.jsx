@@ -23,11 +23,13 @@ const FreeDraw = ({ drawing = false, onCreate = () => {} }) => {
 
   // On mount
   useEffect(() => {
+    if (!drawing) return;
+
     const freeHandShapes = new Leaflet.FreeHandShapes(FREEHANDSHAPES_OPTIONS);
     setFreeHandShapes(freeHandShapes);
     map.addLayer(freeHandShapes);
     return () => map.removeLayer(freeHandShapes);
-  }, [map]);
+  }, [drawing, map]);
 
   // Add layerAdd event handler
   useEffect(() => {
