@@ -1,11 +1,14 @@
 import { useState, useCallback } from 'react';
 import { MapContainer, TileLayer } from 'react-leaflet';
+import Leaflet from 'leaflet';
+
 import FreeDraw from './FreeDraw';
 import Geoman from './Geoman';
 import Controls from './Controls';
 import UpdatingGeoJSON from './UpdatingGeoJSON';
 
 import { testGeoJsonOne } from '../../consts/testGeoJson';
+import ICON_OPTIONS from '../../consts/iconOptions';
 
 import 'leaflet/dist/leaflet.css';
 
@@ -60,6 +63,10 @@ const Map = () => {
       center={[51.505456972844144, -0.1302909851074219]}
       zoom={14}
       whenCreated={setMap}
+      whenReady={() => {
+        delete Leaflet.Icon.Default.prototype._getIconUrl;
+        Leaflet.Icon.Default.mergeOptions(ICON_OPTIONS);
+      }}
     >
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
