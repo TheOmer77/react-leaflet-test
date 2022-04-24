@@ -4,7 +4,10 @@ export const testGeoJsonOne = {
     {
       type: 'Feature',
       id: 'E14000639',
-      properties: { name: 'Cities of London and Westminster' },
+      properties: {
+        name: 'Cities of London and Westminster',
+        color: '#ff5000',
+      },
       geometry: {
         type: 'Polygon',
         coordinates: [
