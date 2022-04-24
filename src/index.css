@@ -19,6 +19,11 @@ body {
   height: 100vh;
 }
 
+#map .leaflet-div-icon {
+  background-color: transparent;
+  border: none;
+}
+
 .list-group {
   display: flex;
   flex-direction: column;

@@ -5,7 +5,7 @@ import Leaflet from 'leaflet';
 import FreeDraw from './FreeDraw';
 import Geoman from './Geoman';
 import Controls from './Controls';
-import UpdatingGeoJSON from './UpdatingGeoJSON';
+import CustomGeoJSON from './CustomGeoJSON';
 
 import { testGeoJsonOne } from '../../consts/testGeoJson';
 import ICON_OPTIONS from '../../consts/iconOptions';
@@ -117,12 +117,12 @@ const Map = () => {
         onDataChange={setGeoJsonData}
       />
       {geoJsonVisible && (
-        <UpdatingGeoJSON
+        <CustomGeoJSON
           data={geoJsonData}
-          onEachFeature={(feature, layer) => {
-            // Has to be a string! Otherwise it causes errors
-            layer.bindTooltip(`${feature.properties.name}`);
-          }}
+          style={(feature) => ({
+            color: feature.properties.color || '#3388ff',
+          })}
+          tooltip={(feature) => feature.properties.name}
           eventHandlers={{
             click: (event) => {
               switch (mode) {
