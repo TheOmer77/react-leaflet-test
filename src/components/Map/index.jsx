@@ -15,7 +15,7 @@ import 'leaflet/dist/leaflet.css';
 /**
  * Possible draw modes.
  * Circle is not included because it's not supported in GeoJSON.
- * @typedef { null | 'freedraw' | 'rectangle' | 'polygon' | 'marker' | 'delete' } Mode
+ * @typedef { null | 'freedraw' | 'rectangle' | 'polygon' | 'polyline' | 'marker' | 'delete' } Mode
  */
 
 const Map = () => {
@@ -86,6 +86,8 @@ const Map = () => {
             ? 'Rectangle'
             : mode === 'polygon'
             ? 'Polygon'
+            : mode === 'polyline'
+            ? 'Line'
             : mode === 'marker'
             ? 'Marker'
             : null

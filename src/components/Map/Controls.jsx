@@ -100,6 +100,12 @@ const Controls = ({
         onClick: () => onModeChange && onModeChange('polygon'),
       },
       {
+        id: 'polyline',
+        label: mode === 'polyline' ? 'Drawing line lol' : 'Line',
+        disabled: mode === 'polyline',
+        onClick: () => onModeChange && onModeChange('polyline'),
+      },
+      {
         id: 'marker',
         label: mode === 'marker' ? 'Placing marker lol' : 'Marker',
         disabled: mode === 'marker',
