@@ -18,6 +18,14 @@ import 'leaflet/dist/leaflet.css';
  * @typedef { null | 'freedraw' | 'rectangle' | 'polygon' | 'polyline' | 'marker' | 'delete' } Mode
  */
 
+/** @param {import('geojson').Feature} feature */
+const getTypeString = (feature) =>
+  feature.geometry.type === 'LineString'
+    ? 'line'
+    : feature.geometry.type === 'Point'
+    ? 'marker'
+    : feature.geometry.type.toLowerCase();
+
 const Map = () => {
   /** @type {[import('leaflet').Map, React.Dispatch<import('leaflet').Map>]} */
   const [map, setMap] = useState(null);
@@ -39,7 +47,9 @@ const Map = () => {
           {
             id,
             ...polygon.toGeoJSON(),
-            properties: { name: `New feature ${id}` },
+            properties: {
+              name: `New ${getTypeString(polygon.toGeoJSON())} ${id}`,
+            },
           },
         ],
       })),
