@@ -8,7 +8,7 @@ import Controls from './Controls';
 import CustomGeoJSON from './CustomGeoJSON';
 
 import { testGeoJsonOne } from '../../consts/testGeoJson';
-import ICON_OPTIONS from '../../consts/iconOptions';
+import { ICON_OPTIONS } from '../../consts/markerIcon';
 
 import 'leaflet/dist/leaflet.css';
 

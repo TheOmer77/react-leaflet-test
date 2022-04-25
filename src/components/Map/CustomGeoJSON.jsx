@@ -1,6 +1,4 @@
 import { useCallback } from 'react';
-import { renderToStaticMarkup } from 'react-dom/server';
-import { divIcon } from 'leaflet';
 import {
   Polyline,
   Polygon,
@@ -9,24 +7,7 @@ import {
   Marker,
 } from 'react-leaflet';
 
-import ICON_OPTIONS from '../../consts/iconOptions';
-import { ReactComponent as MarkerImage } from '../../assets/images/marker_image.svg';
-
-const customMarkerIcon = (color) =>
-  divIcon({
-    html: renderToStaticMarkup(
-      <MarkerImage
-        width={ICON_OPTIONS.iconSize[0]}
-        height={ICON_OPTIONS.iconSize[1]}
-        fill={color}
-      />
-    ),
-    iconSize: ICON_OPTIONS.iconSize,
-    iconAnchor: ICON_OPTIONS.iconAnchor,
-    shadowUrl: ICON_OPTIONS.shadowUrl,
-    shadowAnchor: ICON_OPTIONS.shadowAnchor,
-    shadowSize: ICON_OPTIONS.shadowSize,
-  });
+import markerIcon from '../../consts/markerIcon';
 
 /**
  * @param {{
@@ -45,7 +26,7 @@ const CustomGeoJSON = ({ data, style = {}, eventHandlers = {}, tooltip }) => {
           return (
             <Marker
               {...props}
-              icon={customMarkerIcon(props?.pathOptions?.color)}
+              icon={markerIcon(props?.pathOptions?.color)}
               position={[...feature.geometry.coordinates].reverse()}
             />
           );

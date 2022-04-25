@@ -3,6 +3,7 @@ import { useMap } from 'react-leaflet';
 import '@geoman-io/leaflet-geoman-free';
 
 import '@geoman-io/leaflet-geoman-free/dist/leaflet-geoman.css';
+import markerIcon from '../../consts/markerIcon';
 
 const MODES = {
   Marker: 'Marker',
@@ -36,7 +37,8 @@ const Geoman = ({ controls = false, mode, onCreate = () => {} }) => {
   }, [controls, map, onCreate]);
 
   useEffect(() => {
-    if (Object.keys(MODES).includes(mode)) map.pm.enableDraw(mode);
+    if (Object.keys(MODES).includes(mode))
+      map.pm.enableDraw(mode, { markerStyle: { icon: markerIcon() } });
     return () => map.pm.disableDraw();
   }, [map.pm, mode]);
 
