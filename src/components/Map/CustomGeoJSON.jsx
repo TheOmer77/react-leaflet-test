@@ -12,11 +12,15 @@ import {
 import ICON_OPTIONS from '../../consts/iconOptions';
 import { ReactComponent as MarkerImage } from '../../assets/images/marker_image.svg';
 
-const customMarkerIcon = (color = '#3388ff') =>
+const customMarkerIcon = (color) =>
   divIcon({
-    html: renderToStaticMarkup(<MarkerImage />)
-      .replaceAll('1em', 48)
-      .replaceAll('#3388ff', color),
+    html: renderToStaticMarkup(
+      <MarkerImage
+        width={ICON_OPTIONS.iconSize[0]}
+        height={ICON_OPTIONS.iconSize[1]}
+        fill={color}
+      />
+    ),
     iconSize: ICON_OPTIONS.iconSize,
     iconAnchor: ICON_OPTIONS.iconAnchor,
     shadowUrl: ICON_OPTIONS.shadowUrl,
