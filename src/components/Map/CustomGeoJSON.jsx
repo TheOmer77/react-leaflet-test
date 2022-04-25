@@ -61,20 +61,11 @@ const CustomGeoJSON = ({ data, style = {}, eventHandlers = {}, tooltip }) => {
       eventHandlers={Object.keys(eventHandlers).reduce(
         (obj, field) => ({
           ...obj,
-          [field]: (event) =>
-            eventHandlers[field]({
-              ...event,
-              propagatedFrom: {
-                ...event.propagatedFrom,
-                feature,
-                __proto__: event.propagatedFrom.__proto__,
-              },
-              layer: {
-                ...event.layer,
-                feature,
-                __proto__: event.layer.__proto__,
-              },
-            }),
+          [field]: (event) => {
+            event.layer.feature = feature;
+            event.propagatedFrom.feature = feature;
+            return eventHandlers[field](event);
+          },
         }),
         {}
       )}
