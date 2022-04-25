@@ -7,7 +7,7 @@ import {
   Marker,
 } from 'react-leaflet';
 
-import markerIcon from '../../consts/markerIcon';
+import markerIcon, { ICON_OPTIONS } from '../../consts/markerIcon';
 
 /**
  * @param {{
@@ -79,7 +79,16 @@ const CustomGeoJSON = ({ data, style = {}, eventHandlers = {}, tooltip }) => {
         {}
       )}
     >
-      {tooltip && <Tooltip>{tooltip(feature)}</Tooltip>}
+      {tooltip && (
+        <Tooltip
+          {...(feature.geometry.type === 'Point' && {
+            offset: [0, ICON_OPTIONS.iconSize[1] * -1],
+            direction: 'top',
+          })}
+        >
+          {tooltip(feature)}
+        </Tooltip>
+      )}
       {getFeatureComponent(feature, {
         pathOptions: typeof style === 'function' ? style(feature) : style,
       })}
