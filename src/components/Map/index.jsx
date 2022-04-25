@@ -132,7 +132,9 @@ const Map = () => {
                   setMode(null);
                   return handleDelete(event?.propagatedFrom?.feature?.id);
                 default:
-                  return alert(JSON.stringify(event?.propagatedFrom?.feature));
+                  return alert(
+                    JSON.stringify(event?.propagatedFrom?.feature, null, 2)
+                  );
               }
             },
           }}
