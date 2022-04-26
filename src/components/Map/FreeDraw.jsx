@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useMap } from 'react-leaflet';
 import Leaflet from 'leaflet';
 import 'leaflet-freehandshapes';
@@ -9,7 +9,6 @@ const FREEHANDSHAPES_OPTIONS = {
   polyline: { smoothFactor: 0 },
   simplify_tolerance: 0,
 };
-
 /**
  * @param {{
  *  drawing?: boolean;
@@ -18,18 +17,20 @@ const FREEHANDSHAPES_OPTIONS = {
  */
 const FreeDraw = ({ drawing = false, onCreate = () => {} }) => {
   const map = useMap();
-  /** @type {[import('leaflet').FreeHandShapes, React.Dispatch<import('leaflet').FreeHandShapes>]} */
-  const [freeHandShapes, setFreeHandShapes] = useState(null);
+
+  const freeHandShapes = useMemo(
+    /** @returns {[import('leaflet').FreeHandShapes, React.Dispatch<import('leaflet').FreeHandShapes>]} */
+    () => new Leaflet.FreeHandShapes(FREEHANDSHAPES_OPTIONS),
+    []
+  );
 
   // On mount
   useEffect(() => {
     if (!drawing) return;
 
-    const freeHandShapes = new Leaflet.FreeHandShapes(FREEHANDSHAPES_OPTIONS);
-    setFreeHandShapes(freeHandShapes);
     map.addLayer(freeHandShapes);
     return () => map.removeLayer(freeHandShapes);
-  }, [drawing, map]);
+  }, [drawing, freeHandShapes, map]);
 
   // Add layerAdd event handler
   useEffect(() => {
@@ -45,9 +46,11 @@ const FreeDraw = ({ drawing = false, onCreate = () => {} }) => {
     if (freeHandShapes) {
       freeHandShapes.setMode(drawing ? 'add' : 'view');
       // This line fixes a touch issue on mobile Chrome
-      drawing && freeHandShapes.setMapPermissions('enable');
+      map.hasLayer(freeHandShapes) &&
+        drawing &&
+        freeHandShapes.setMapPermissions('enable');
     }
-  }, [freeHandShapes, drawing]);
+  }, [freeHandShapes, drawing, map]);
 
   return null;
 };
