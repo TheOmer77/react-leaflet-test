@@ -12,14 +12,15 @@ const FREEHANDSHAPES_OPTIONS = {
 /**
  * @param {{
  *  drawing?: boolean;
- *  onCreate?: import('leaflet').LeafletEventHandlerFn
+ *  onCreate?: import('leaflet').LeafletEventHandlerFn;
+ *  onEscape?: import('leaflet').LeafletKeyboardEventHandlerFn;
  * }} props
  */
-const FreeDraw = ({ drawing = false, onCreate = () => {} }) => {
+const FreeDraw = ({ drawing = false, onCreate, onEscape }) => {
   const map = useMap();
 
   const freeHandShapes = useMemo(
-    /** @returns {[import('leaflet').FreeHandShapes, React.Dispatch<import('leaflet').FreeHandShapes>]} */
+    /** @returns {import('leaflet').FreeHandShapes} */
     () => new Leaflet.FreeHandShapes(FREEHANDSHAPES_OPTIONS),
     []
   );
@@ -35,14 +36,26 @@ const FreeDraw = ({ drawing = false, onCreate = () => {} }) => {
       drawing &&
       freeHandShapes.setMapPermissions('enable');
 
-    return () => map.removeLayer(freeHandShapes);
-  }, [drawing, freeHandShapes, map]);
+    /** @type {import('leaflet').LeafletKeyboardEventHandlerFn} */
+    const escEventListener = (event) => {
+      if (event.originalEvent.code === 'Escape') {
+        freeHandShapes.stopDraw();
+        if (onEscape) return onEscape(event);
+      }
+    };
+    map.on('keydown', escEventListener);
+
+    return () => {
+      map.off('keydown', escEventListener);
+      map.removeLayer(freeHandShapes);
+    };
+  }, [drawing, freeHandShapes, map, onEscape]);
 
   // Add layerAdd event handler
   useEffect(() => {
     if (!freeHandShapes) return;
 
-    const handleLayerAdd = (event) => onCreate(event);
+    const handleLayerAdd = (event) => onCreate && onCreate(event);
     freeHandShapes.on('layeradd', handleLayerAdd);
     return () => freeHandShapes.off('layeradd', handleLayerAdd);
   }, [freeHandShapes, onCreate]);

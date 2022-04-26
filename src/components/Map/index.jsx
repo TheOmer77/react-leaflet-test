@@ -89,6 +89,7 @@ const Map = () => {
           handleDraw(event.layer, event.layer._leaflet_id);
           setMode(null);
         }}
+        onEscape={() => setMode(null)}
       />
       <Geoman
         mode={
