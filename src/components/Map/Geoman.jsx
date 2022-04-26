@@ -45,7 +45,7 @@ const Geoman = ({ controls = false, mode, onCreate, onEscape }) => {
   useEffect(() => {
     /** @type {import('leaflet').LeafletKeyboardEventHandlerFn} */
     const escEventListener = (event) => {
-      if (event.originalEvent.code === 'Escape') {
+      if (event.code === 'Escape') {
         map.pm.disableDraw();
         if (onEscape) return onEscape(event);
         map.pm.enableDraw(mode, DRAW_OPTIONS);
@@ -54,10 +54,10 @@ const Geoman = ({ controls = false, mode, onCreate, onEscape }) => {
 
     if (Object.keys(MODES).includes(mode)) {
       map.pm.enableDraw(mode, DRAW_OPTIONS);
-      map.on('keydown', escEventListener);
+      document.addEventListener('keydown', escEventListener);
     }
     return () => {
-      map.off('keydown', escEventListener);
+      document.removeEventListener('keydown', escEventListener);
       map.pm.disableDraw();
     };
   }, [map, mode, onEscape]);

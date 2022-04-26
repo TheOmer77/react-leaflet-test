@@ -68,14 +68,14 @@ const Map = () => {
   useEffect(() => {
     /**
      * Esc event handler for delete mode only
-     * @type {import('leaflet').LeafletKeyboardEventHandlerFn}
+     * @type {KeyboardEvent}
      */
     const escEventListener = (event) =>
-      event.originalEvent.code === 'Escape' && setMode(null);
+      event.code === 'Escape' && setMode(null);
 
-    mode === 'delete' && map && map.on('keydown', escEventListener);
-    return () => map && map.off('keydown', escEventListener);
-  }, [map, mode]);
+    mode === 'delete' && document.addEventListener('keydown', escEventListener);
+    return () => document.removeEventListener('keydown', escEventListener);
+  }, [mode]);
 
   return (
     <MapContainer

@@ -38,15 +38,15 @@ const FreeDraw = ({ drawing = false, onCreate, onEscape }) => {
 
     /** @type {import('leaflet').LeafletKeyboardEventHandlerFn} */
     const escEventListener = (event) => {
-      if (event.originalEvent.code === 'Escape') {
+      if (event.code === 'Escape') {
         freeHandShapes.stopDraw();
         if (onEscape) return onEscape(event);
       }
     };
-    map.on('keydown', escEventListener);
+    document.addEventListener('keydown', escEventListener);
 
     return () => {
-      map.off('keydown', escEventListener);
+      document.removeEventListener('keydown', escEventListener);
       map.removeLayer(freeHandShapes);
     };
   }, [drawing, freeHandShapes, map, onEscape]);
