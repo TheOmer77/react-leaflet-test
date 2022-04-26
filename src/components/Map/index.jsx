@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { MapContainer, TileLayer } from 'react-leaflet';
 import Leaflet from 'leaflet';
 
@@ -64,6 +64,18 @@ const Map = () => {
       })),
     []
   );
+
+  useEffect(() => {
+    /**
+     * Esc event handler for delete mode only
+     * @type {import('leaflet').LeafletKeyboardEventHandlerFn}
+     */
+    const escEventListener = (event) =>
+      event.originalEvent.code === 'Escape' && setMode(null);
+
+    mode === 'delete' && map && map.on('keydown', escEventListener);
+    return () => map && map.off('keydown', escEventListener);
+  }, [map, mode]);
 
   return (
     <MapContainer
