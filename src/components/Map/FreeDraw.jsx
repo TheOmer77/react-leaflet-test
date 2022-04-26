@@ -24,11 +24,17 @@ const FreeDraw = ({ drawing = false, onCreate = () => {} }) => {
     []
   );
 
-  // On mount
+  // On mount, mode change
   useEffect(() => {
-    if (!drawing) return;
+    if (!drawing || !freeHandShapes) return;
 
     map.addLayer(freeHandShapes);
+    freeHandShapes.setMode(drawing ? 'add' : 'view');
+    // This line fixes a touch issue on mobile Chrome
+    map.hasLayer(freeHandShapes) &&
+      drawing &&
+      freeHandShapes.setMapPermissions('enable');
+
     return () => map.removeLayer(freeHandShapes);
   }, [drawing, freeHandShapes, map]);
 
@@ -40,17 +46,6 @@ const FreeDraw = ({ drawing = false, onCreate = () => {} }) => {
     freeHandShapes.on('layeradd', handleLayerAdd);
     return () => freeHandShapes.off('layeradd', handleLayerAdd);
   }, [freeHandShapes, onCreate]);
-
-  // On mode change
-  useEffect(() => {
-    if (freeHandShapes) {
-      freeHandShapes.setMode(drawing ? 'add' : 'view');
-      // This line fixes a touch issue on mobile Chrome
-      map.hasLayer(freeHandShapes) &&
-        drawing &&
-        freeHandShapes.setMapPermissions('enable');
-    }
-  }, [freeHandShapes, drawing, map]);
 
   return null;
 };
