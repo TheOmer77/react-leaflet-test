@@ -107,6 +107,7 @@ const Map = () => {
           map && map.removeLayer(event.layer);
           setMode(null);
         }}
+        onEscape={() => setMode(null)}
       />
       <Controls
         position='bottomright'
