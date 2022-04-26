@@ -22,12 +22,13 @@ const DRAW_OPTIONS = { markerStyle: { icon: markerIcon() } };
  *  controls?: import('leaflet').PM.ToolbarOptions | false;
  *  mode?: keyof MODES;
  *  onCreate?: import('leaflet').PM.CreateEventHandler;
- *  onEscape?: import('leaflet').LeafletKeyboardEventHandlerFn
+ *  onEscape?: import('leaflet').LeafletKeyboardEventHandlerFn;
  * }} props
  */
 const Geoman = ({ controls = false, mode, onCreate, onEscape }) => {
   const map = useMap();
 
+  // On mount
   useEffect(() => {
     if (controls) map.pm.addControls(controls);
 
@@ -40,6 +41,7 @@ const Geoman = ({ controls = false, mode, onCreate, onEscape }) => {
     };
   }, [controls, map, onCreate]);
 
+  // On mode change
   useEffect(() => {
     /** @type {import('leaflet').LeafletKeyboardEventHandlerFn} */
     const escEventListener = (event) => {
