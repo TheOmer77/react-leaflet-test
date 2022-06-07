@@ -58,69 +58,75 @@ const Controls = ({
   );
 
   const geoJsonItems = useMemo(
-    /** @type {() => ListItem[]} */
-    () => [
-      {
-        id: 'toggleGeoJson',
-        label: `${showGeoJson ? 'Hide' : 'Show'} GeoJSON`,
-        onClick: () => onVisibilityChange(!showGeoJson),
-      },
-      {
-        id: 'useGeoJsonOne',
-        label: 'Use GeoJSON one',
-        onClick: () => onDataChange(testGeoJsonOne),
-      },
-      {
-        id: 'useGeoJsonTwo',
-        label: 'Use GeoJSON two',
-        onClick: () => onDataChange(testGeoJsonTwo),
-      },
-    ],
-    [onDataChange, onVisibilityChange, showGeoJson]
-  );
-
-  const drawItems = useMemo(
-    /** @type {() => ListItem[]} */
-    () => [
-      {
-        id: 'freedraw',
-        label: 'Freedraw',
-        onClick: () => onModeChange?.('freedraw'),
-      },
-      {
-        id: 'rectangle',
-        label: 'Rectangle',
-        onClick: () => onModeChange?.('rectangle'),
-      },
-      {
-        id: 'polygon',
-        label: 'Polygon',
-        onClick: () => onModeChange?.('polygon'),
-      },
-      {
-        id: 'polyline',
-        label: 'Line',
-        onClick: () => onModeChange?.('polyline'),
-      },
-      {
-        id: 'marker',
-        label: 'Marker',
-        onClick: () => onModeChange?.('marker'),
-      },
-      {
-        id: 'delete',
-        label: 'Delete',
-        onClick: () => onModeChange?.('delete'),
-      },
-    ],
-    [onModeChange]
-  );
+      /** @type {() => ListItem[]} */
+      () => [
+        {
+          id: 'toggleGeoJson',
+          label: `${showGeoJson ? 'Hide' : 'Show'} GeoJSON`,
+          onClick: () => onVisibilityChange(!showGeoJson),
+        },
+        {
+          id: 'useGeoJsonOne',
+          label: 'Use GeoJSON one',
+          onClick: () => onDataChange(testGeoJsonOne),
+        },
+        {
+          id: 'useGeoJsonTwo',
+          label: 'Use GeoJSON two',
+          onClick: () => onDataChange(testGeoJsonTwo),
+        },
+      ],
+      [onDataChange, onVisibilityChange, showGeoJson]
+    ),
+    drawItems = useMemo(
+      /** @type {() => ListItem[]} */
+      () => [
+        {
+          id: 'freedraw',
+          label: 'Freedraw',
+          onClick: () => onModeChange?.('freedraw'),
+        },
+        {
+          id: 'rectangle',
+          label: 'Rectangle',
+          onClick: () => onModeChange?.('rectangle'),
+        },
+        {
+          id: 'polygon',
+          label: 'Polygon',
+          onClick: () => onModeChange?.('polygon'),
+        },
+        {
+          id: 'polyline',
+          label: 'Line',
+          onClick: () => onModeChange?.('polyline'),
+        },
+        {
+          id: 'marker',
+          label: 'Marker',
+          onClick: () => onModeChange?.('marker'),
+        },
+      ],
+      [onModeChange]
+    ),
+    editItems = useMemo(
+      /** @type {() => ListItem[]} */
+      () => [
+        {
+          id: 'delete',
+          label: 'Delete',
+          onClick: () => onModeChange?.('delete'),
+        },
+      ],
+      [onModeChange]
+    );
 
   return (
     <div className={positionClass}>
       <div className='leaflet-control list-group'>
         {list(geoJsonItems)}
         {list(drawItems)}
+        {list(editItems)}
       </div>
     </div>
   );
