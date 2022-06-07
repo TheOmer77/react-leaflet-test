@@ -1,4 +1,5 @@
 import { useMemo, useCallback } from 'react';
+import classNames from 'classnames';
 
 import POSITION_CLASSES from '../../consts/positionClasses';
 import { testGeoJsonOne, testGeoJsonTwo } from '../../consts/testGeoJson';
@@ -42,7 +43,7 @@ const Controls = ({
             key={id}
             id={`listItem-${id}`}
             disabled={disabled}
-            className='list-item'
+            className={classNames('list-item', mode === id && 'selected')}
             onClick={(event) => {
               event.stopPropagation();
               onClick(event);
@@ -53,7 +54,7 @@ const Controls = ({
         ))}
       </div>
     ),
-    []
+    [mode]
   );
 
   const geoJsonItems = useMemo(
@@ -83,42 +84,36 @@ const Controls = ({
     () => [
       {
         id: 'freedraw',
-        label: mode === 'freedraw' ? 'Freedrawing lol' : 'Freedraw',
-        disabled: mode === 'freedraw',
-        onClick: () => onModeChange && onModeChange('freedraw'),
+        label: 'Freedraw',
+        onClick: () => onModeChange?.('freedraw'),
       },
       {
         id: 'rectangle',
-        label: mode === 'rectangle' ? 'Drawing rectangle lol' : 'Rectangle',
-        disabled: mode === 'rectangle',
-        onClick: () => onModeChange && onModeChange('rectangle'),
+        label: 'Rectangle',
+        onClick: () => onModeChange?.('rectangle'),
       },
       {
         id: 'polygon',
-        label: mode === 'polygon' ? 'Drawing polygon lol' : 'Polygon',
-        disabled: mode === 'polygon',
-        onClick: () => onModeChange && onModeChange('polygon'),
+        label: 'Polygon',
+        onClick: () => onModeChange?.('polygon'),
       },
       {
         id: 'polyline',
-        label: mode === 'polyline' ? 'Drawing line lol' : 'Line',
-        disabled: mode === 'polyline',
-        onClick: () => onModeChange && onModeChange('polyline'),
+        label: 'Line',
+        onClick: () => onModeChange?.('polyline'),
       },
       {
         id: 'marker',
-        label: mode === 'marker' ? 'Placing marker lol' : 'Marker',
-        disabled: mode === 'marker',
-        onClick: () => onModeChange && onModeChange('marker'),
+        label: 'Marker',
+        onClick: () => onModeChange?.('marker'),
       },
       {
         id: 'delete',
-        label: mode === 'delete' ? 'Deleting stuff lol' : 'Delete',
-        disabled: mode === 'delete',
-        onClick: () => onModeChange && onModeChange('delete'),
+        label: 'Delete',
+        onClick: () => onModeChange?.('delete'),
       },
     ],
-    [mode, onModeChange]
+    [onModeChange]
   );
 
   return (
