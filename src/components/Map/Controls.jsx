@@ -113,6 +113,11 @@ const Controls = ({
       /** @type {() => ListItem[]} */
       () => [
         {
+          id: 'drag',
+          label: 'Drag',
+          onClick: () => onModeChange?.('drag'),
+        },
+        {
           id: 'delete',
           label: 'Delete',
           onClick: () => onModeChange?.('delete'),

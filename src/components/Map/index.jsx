@@ -15,7 +15,7 @@ import 'leaflet/dist/leaflet.css';
 /**
  * Possible draw modes.
  * Circle is not included because it's not supported in GeoJSON.
- * @typedef { null | 'freedraw' | 'rectangle' | 'polygon' | 'polyline' | 'marker' | 'delete' } Mode
+ * @typedef { null | 'freedraw' | 'rectangle' | 'polygon' | 'polyline' | 'marker' | 'drag' | 'delete' } Mode
  */
 
 /** @param {import('geojson').Feature} feature */
@@ -36,22 +36,36 @@ const Map = () => {
 
   const handleDraw = useCallback(
     /**
-     * @param {import("leaflet").Polygon} polygon
+     * @param {import("leaflet").Layer} layer
      * @param {number} id
      */
-    (polygon, id) =>
+    (layer, id) =>
       setGeoJsonData((prev) => ({
         ...prev,
         features: [
           ...prev.features,
           {
             id,
-            ...polygon.toGeoJSON(),
+            ...layer.toGeoJSON(),
             properties: {
-              name: `New ${getTypeString(polygon.toGeoJSON())} ${id}`,
+              name: `New ${getTypeString(layer.toGeoJSON())} ${id}`,
             },
           },
         ],
+      })),
+    []
+  );
+
+  const handleDrag = useCallback(
+    /** @param {import("leaflet").Polygon} layer */
+    (layer) =>
+      setGeoJsonData((prev) => ({
+        ...prev,
+        features: prev.features.map((prevFeature) =>
+          prevFeature.id === layer.feature.id
+            ? { ...prevFeature, ...layer.toGeoJSON() }
+            : prevFeature
+        ),
       })),
     []
   );
@@ -113,6 +127,8 @@ const Map = () => {
             ? 'Line'
             : mode === 'marker'
             ? 'Marker'
+            : mode === 'drag'
+            ? 'Drag'
             : null
         }
         onCreate={(event) => {
@@ -140,9 +156,11 @@ const Map = () => {
           })}
           tooltip={(feature) => feature.properties.name}
           eventHandlers={{
+            /** @type {import('leaflet').PM.DragEndEventHandler} */
             click: (event) => {
               switch (mode) {
                 case 'freedraw':
+                case 'drag':
                   return;
                 case 'delete':
                   setMode(null);
@@ -153,6 +171,8 @@ const Map = () => {
                   );
               }
             },
+            /** @type {import('leaflet').PM.DragEndEventHandler} */
+            'pm:dragend': (event) => handleDrag(event?.propagatedFrom),
           }}
         />
       )}

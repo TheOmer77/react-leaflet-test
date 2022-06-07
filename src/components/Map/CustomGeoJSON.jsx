@@ -61,9 +61,10 @@ const CustomGeoJSON = ({ data, style = {}, eventHandlers = {}, tooltip }) => {
       eventHandlers={Object.keys(eventHandlers).reduce(
         (obj, field) => ({
           ...obj,
+          /** @param {import('leaflet').LeafletEvent} event */
           [field]: (event) => {
             event.layer.feature = feature;
-            event.propagatedFrom.feature = feature;
+            event.propagatedFrom = event.layer; // `layer` is deprecated
             return eventHandlers[field](event);
           },
         }),
