@@ -114,12 +114,12 @@ const Controls = ({
       () => [
         {
           id: 'drag',
-          label: 'Drag',
+          label: 'Drag layers',
           onClick: () => onModeChange?.('drag'),
         },
         {
           id: 'delete',
-          label: 'Delete',
+          label: 'Delete layer',
           onClick: () => onModeChange?.('delete'),
         },
       ],
