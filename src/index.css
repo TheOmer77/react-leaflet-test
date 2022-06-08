@@ -52,10 +52,6 @@ body {
   color: rgba(255, 255, 255, 0.5);
 }
 
-.list > .list-item:hover:not(:disabled) {
-  background-color: rgba(0, 0, 0, 0.625);
-}
-
 .list > .list-item:active:not(:disabled) {
   background-color: rgba(0, 0, 0, 0.75);
 }
@@ -66,4 +62,10 @@ body {
 
 .list > .list-item.selected {
   background-color: rgba(0, 0, 0, 0.675);
+}
+
+@media (hover: hover) {
+  .list > .list-item:hover:not(:disabled) {
+    background-color: rgba(0, 0, 0, 0.625);
+  }
 }
