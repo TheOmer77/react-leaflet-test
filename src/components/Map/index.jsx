@@ -145,7 +145,10 @@ const Map = () => {
         onModeChange={(mode) =>
           setMode((prev) => (prev === mode ? null : mode))
         }
-        onVisibilityChange={setGeoJSONVisible}
+        onVisibilityChange={(show) => {
+          setGeoJSONVisible(show);
+          setMode(null);
+        }}
         onDataChange={(data) => {
           setGeoJsonData(data);
           setMode(null);
