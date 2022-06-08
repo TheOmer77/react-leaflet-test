@@ -65,7 +65,7 @@ const Map = () => {
     []
   );
 
-  const handleDrag = useCallback(
+  const handleEdit = useCallback(
     /** @param {import("leaflet").Polygon} layer */
     (layer) =>
       setGeoJsonData((prev) => ({
@@ -136,6 +136,8 @@ const Map = () => {
             ? 'Line'
             : mode === 'marker'
             ? 'Marker'
+            : mode === 'edit'
+            ? 'Edit'
             : mode === 'drag'
             ? 'Drag'
             : null
@@ -175,6 +177,7 @@ const Map = () => {
             click: (event) => {
               switch (mode) {
                 case 'freedraw':
+                case 'edit':
                 case 'drag':
                   return;
                 case 'delete':
@@ -186,8 +189,10 @@ const Map = () => {
                   );
               }
             },
+            /** @type {import('leaflet').PM.EditEventHandler} */
+            'pm:edit': (event) => handleEdit(event?.propagatedFrom),
             /** @type {import('leaflet').PM.DragEndEventHandler} */
-            'pm:dragend': (event) => handleDrag(event?.propagatedFrom),
+            'pm:dragend': (event) => handleEdit(event?.propagatedFrom),
           }}
         />
       )}

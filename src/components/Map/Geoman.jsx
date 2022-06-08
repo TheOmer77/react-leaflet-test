@@ -15,6 +15,7 @@ const DRAW_MODES = {
     Polygon: 'Polygon',
   },
   EDIT_MODES = {
+    Edit: 'Edit',
     Drag: 'Drag',
   };
 
@@ -52,6 +53,7 @@ const Geoman = ({ controls = false, mode, onCreate, onEscape }) => {
         map.pm.disableDraw();
         if (onEscape) return onEscape(event);
         map.pm.enableDraw(mode, DRAW_OPTIONS);
+        map.pm.disableGlobalEditMode();
         map.pm.disableGlobalDragMode();
       }
     };
@@ -62,6 +64,10 @@ const Geoman = ({ controls = false, mode, onCreate, onEscape }) => {
       map.pm.enableDraw(mode, DRAW_OPTIONS);
     if (Object.keys(EDIT_MODES).includes(mode))
       switch (mode) {
+        case 'Edit':
+          map.pm.enableGlobalEditMode();
+          break;
+
         case 'Drag':
           map.pm.enableGlobalDragMode();
           break;
@@ -73,6 +79,7 @@ const Geoman = ({ controls = false, mode, onCreate, onEscape }) => {
     return () => {
       document.removeEventListener('keydown', escEventListener);
       map.pm.disableDraw();
+      map.pm.disableGlobalEditMode();
       map.pm.disableGlobalDragMode();
     };
   }, [map, mode, onEscape]);
