@@ -15,7 +15,16 @@ import 'leaflet/dist/leaflet.css';
 /**
  * Possible draw modes.
  * Circle is not included because it's not supported in GeoJSON.
- * @typedef { null | 'freedraw' | 'rectangle' | 'polygon' | 'polyline' | 'marker' | 'drag' | 'delete' } Mode
+ * @typedef { null |
+ * 'freedraw' |
+ * 'rectangle' |
+ * 'polygon' |
+ * 'polyline' |
+ * 'marker' |
+ * 'edit' |
+ * 'drag' |
+ * 'delete'
+ * } Mode
  */
 
 /** @param {import('geojson').Feature} feature */
