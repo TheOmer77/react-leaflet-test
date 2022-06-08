@@ -9,6 +9,7 @@ import CustomGeoJSON from './CustomGeoJSON';
 
 import { testGeoJsonOne } from '../../consts/testGeoJson';
 import { ICON_OPTIONS } from '../../consts/markerIcon';
+import { defaultColor } from '../../consts/colors';
 
 import 'leaflet/dist/leaflet.css';
 
@@ -73,6 +74,22 @@ const Map = () => {
         features: prev.features.map((prevFeature) =>
           prevFeature.id === layer.feature.id
             ? { ...prevFeature, ...layer.toGeoJSON() }
+            : prevFeature
+        ),
+      })),
+    []
+  );
+
+  const handlePropertiesChange = useCallback(
+    (id, properties = {}) =>
+      setGeoJsonData((prev) => ({
+        ...prev,
+        features: prev.features.map((prevFeature) =>
+          prevFeature.id === id
+            ? {
+                ...prevFeature,
+                properties: { ...prevFeature.properties, ...properties },
+              }
             : prevFeature
         ),
       })),
@@ -169,15 +186,28 @@ const Map = () => {
         <CustomGeoJSON
           data={geoJsonData}
           style={(feature) => ({
-            color: feature.properties.color || '#3388ff',
+            color: feature.properties.color || defaultColor,
           })}
           tooltip={(feature) => feature.properties.name}
           eventHandlers={{
             /** @type {import('leaflet').PM.DragEndEventHandler} */
             click: (event) => {
               switch (mode) {
-                case 'freedraw':
                 case 'edit':
+                  handlePropertiesChange(event?.propagatedFrom?.feature?.id, {
+                    color:
+                      prompt(
+                        `Enter color for ${
+                          event?.propagatedFrom?.feature?.properties?.name
+                            ? `'${event?.propagatedFrom?.feature?.properties?.name}'`
+                            : 'this feature'
+                        }:`,
+                        event?.propagatedFrom?.feature?.properties?.color ||
+                          defaultColor
+                      ) || event?.propagatedFrom?.feature?.properties?.color,
+                  });
+                  break;
+                case 'freedraw':
                 case 'drag':
                   return;
                 case 'delete':
