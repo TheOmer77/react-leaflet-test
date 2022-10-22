@@ -1,42 +1,41 @@
-import { useMemo, useCallback } from 'react';
+import { MouseEventHandler, useCallback, useMemo } from 'react';
 import classNames from 'classnames';
 
-import POSITION_CLASSES from '../../consts/positionClasses';
-import { testGeoJsonOne, testGeoJsonTwo } from '../../consts/testGeoJson';
+import POSITION_CLASSES from '../../constants/positionClasses';
+import { testGeoJsonOne, testGeoJsonTwo } from '../../constants/testGeoJson';
 
-/**
- * @typedef {{
- *  id: string;
- *  label: string;
- *  onClick: import('react').MouseEventHandler<HTMLButtonElement>;
- *  disabled?: boolean;
- * }} ListItem
- */
+import type { Mode } from '.';
+import type { FeatureCollection } from 'geojson';
 
-/**
- * @param {{
- *  position?: keyof POSITION_CLASSES;
- *  showGeoJson?: boolean;
- *  mode?: import('.').Mode;
- *  onModeChange?: (mode: import('.').Mode) => void;
- *  onVisibilityChange?: (show: boolean) => void;
- *  onDataChange?: (data: object) => void;
- * }} props
- */
+type ListItem = {
+  id: string;
+  label: string;
+  onClick: MouseEventHandler<HTMLButtonElement>;
+  disabled?: boolean;
+};
+
+interface ControlsProps {
+  position?: keyof typeof POSITION_CLASSES;
+  showGeoJson?: boolean;
+  mode?: Mode;
+  onModeChange?: (mode: Mode) => void;
+  onVisibilityChange?: (show: boolean) => void;
+  onDataChange?: (data: FeatureCollection) => void;
+}
+
 const Controls = ({
   position,
   showGeoJson,
   mode,
-  onModeChange = () => {},
-  onVisibilityChange = () => {},
-  onDataChange = () => {},
-}) => {
+  onModeChange,
+  onVisibilityChange,
+  onDataChange,
+}: ControlsProps) => {
   const positionClass =
     (position && POSITION_CLASSES[position]) || POSITION_CLASSES.topright;
 
   const list = useCallback(
-    /** @param {ListItem[]} listItems */
-    (listItems) => (
+    (listItems: ListItem[]) => (
       <div className='list'>
         {listItems.map(({ id, label, onClick, disabled }) => (
           <button
@@ -57,29 +56,27 @@ const Controls = ({
     [mode]
   );
 
-  const geoJsonItems = useMemo(
-      /** @type {() => ListItem[]} */
+  const geoJsonItems = useMemo<ListItem[]>(
       () => [
         {
           id: 'toggleGeoJson',
           label: `${showGeoJson ? 'Hide' : 'Show'} GeoJSON`,
-          onClick: () => onVisibilityChange(!showGeoJson),
+          onClick: () => onVisibilityChange?.(!showGeoJson),
         },
         {
           id: 'useGeoJsonOne',
           label: 'Use GeoJSON one',
-          onClick: () => onDataChange(testGeoJsonOne),
+          onClick: () => onDataChange?.(testGeoJsonOne),
         },
         {
           id: 'useGeoJsonTwo',
           label: 'Use GeoJSON two',
-          onClick: () => onDataChange(testGeoJsonTwo),
+          onClick: () => onDataChange?.(testGeoJsonTwo),
         },
       ],
       [onDataChange, onVisibilityChange, showGeoJson]
     ),
-    drawItems = useMemo(
-      /** @type {() => ListItem[]} */
+    drawItems = useMemo<ListItem[]>(
       () => [
         {
           id: 'freedraw',
@@ -109,8 +106,7 @@ const Controls = ({
       ],
       [onModeChange]
     ),
-    editItems = useMemo(
-      /** @type {() => ListItem[]} */
+    editItems = useMemo<ListItem[]>(
       () => [
         {
           id: 'edit',

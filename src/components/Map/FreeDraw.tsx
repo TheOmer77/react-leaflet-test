@@ -1,27 +1,29 @@
 import { useEffect, useMemo } from 'react';
+import {
+  FreeHandShapes,
+  FreeHandShapesOptions,
+  LeafletEventHandlerFn,
+} from 'leaflet';
 import { useMap } from 'react-leaflet';
-import Leaflet from 'leaflet';
 import 'leaflet-freehandshapes';
 
-/** @type {import('leaflet').FreeHandShapesOptions} */
-const FREEHANDSHAPES_OPTIONS = {
+interface FreeDrawProps {
+  drawing?: boolean;
+  onCreate?: LeafletEventHandlerFn;
+  onEscape?: (event: KeyboardEvent) => void;
+}
+
+const FREEHANDSHAPES_OPTIONS: FreeHandShapesOptions = {
   polygon: { smoothFactor: 0.3 },
   polyline: { smoothFactor: 0 },
   simplify_tolerance: 0,
 };
-/**
- * @param {{
- *  drawing?: boolean;
- *  onCreate?: import('leaflet').LeafletEventHandlerFn;
- *  onEscape?: import('leaflet').LeafletKeyboardEventHandlerFn;
- * }} props
- */
-const FreeDraw = ({ drawing = false, onCreate, onEscape }) => {
+
+const FreeDraw = ({ drawing = false, onCreate, onEscape }: FreeDrawProps) => {
   const map = useMap();
 
   const freeHandShapes = useMemo(
-    /** @returns {import('leaflet').FreeHandShapes} */
-    () => new Leaflet.FreeHandShapes(FREEHANDSHAPES_OPTIONS),
+    () => new FreeHandShapes(FREEHANDSHAPES_OPTIONS),
     []
   );
 
@@ -36,11 +38,10 @@ const FreeDraw = ({ drawing = false, onCreate, onEscape }) => {
       drawing &&
       freeHandShapes.setMapPermissions('enable');
 
-    /** @type {import('leaflet').LeafletKeyboardEventHandlerFn} */
-    const escEventListener = (event) => {
+    const escEventListener = (event: KeyboardEvent) => {
       if (event.code === 'Escape') {
         freeHandShapes.stopDraw();
-        if (onEscape) return onEscape(event);
+        return onEscape?.(event);
       }
     };
     document.addEventListener('keydown', escEventListener);
@@ -55,9 +56,11 @@ const FreeDraw = ({ drawing = false, onCreate, onEscape }) => {
   useEffect(() => {
     if (!freeHandShapes) return;
 
-    const handleLayerAdd = (event) => onCreate && onCreate(event);
+    const handleLayerAdd: LeafletEventHandlerFn = (event) => onCreate?.(event);
     freeHandShapes.on('layeradd', handleLayerAdd);
-    return () => freeHandShapes.off('layeradd', handleLayerAdd);
+    return () => {
+      freeHandShapes.off('layeradd', handleLayerAdd);
+    };
   }, [freeHandShapes, onCreate]);
 
   return null;

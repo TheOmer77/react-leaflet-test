@@ -1,4 +1,4 @@
-// Classes used by Leaflet to position controls
+/** Classes used by Leaflet to position controls */
 const POSITION_CLASSES = {
   bottomleft: 'leaflet-bottom leaflet-left',
   bottomright: 'leaflet-bottom leaflet-right',

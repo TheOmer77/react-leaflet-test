@@ -5,16 +5,14 @@ import markerImage, {
   ReactComponent as MarkerImage,
 } from '../assets/images/marker_image.svg';
 
-/** @type {import('leaflet').Icon.DefaultIconOptions} */
 export const ICON_OPTIONS = {
   iconUrl: markerImage,
   iconRetinaUrl: markerImage,
-  iconSize: [48, 52],
-  iconAnchor: [24, 44],
+  iconSize: [48, 52] as [number, number],
+  iconAnchor: [24, 44] as [number, number],
 };
 
-/** @param {string} [color] */
-const markerIcon = (color) =>
+const markerIcon = (color?: string) =>
   divIcon({
     html: renderToStaticMarkup(
       <MarkerImage
@@ -25,9 +23,6 @@ const markerIcon = (color) =>
     ),
     iconSize: ICON_OPTIONS.iconSize,
     iconAnchor: ICON_OPTIONS.iconAnchor,
-    shadowUrl: ICON_OPTIONS.shadowUrl,
-    shadowAnchor: ICON_OPTIONS.shadowAnchor,
-    shadowSize: ICON_OPTIONS.shadowSize,
   });
 
 export default markerIcon;

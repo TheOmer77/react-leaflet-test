@@ -1,4 +1,6 @@
-export const testGeoJsonOne = {
+import { FeatureCollection } from 'geojson';
+
+export const testGeoJsonOne: FeatureCollection = {
   type: 'FeatureCollection',
   features: [
     {
@@ -143,7 +145,7 @@ export const testGeoJsonOne = {
   ],
 };
 
-export const testGeoJsonTwo = {
+export const testGeoJsonTwo: FeatureCollection = {
   type: 'FeatureCollection',
   features: [
     {
