@@ -10,7 +10,7 @@ export default defineConfig({
     checker({
       typescript: true,
       eslint: {
-        lintCommand: 'eslint "./src/**/*.jsx"',
+        lintCommand: 'eslint "./src/**/*.{ts,tsx}"',
       },
     }),
     svgr({ svgrOptions: { icon: true } }),
