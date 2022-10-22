@@ -2,6 +2,7 @@
   "env": { "browser": true, "es2021": true },
   "extends": [
     "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
     "plugin:react/recommended",
     "plugin:react/jsx-runtime",
     "plugin:react-hooks/recommended",
@@ -16,6 +17,10 @@
     "ecmaVersion": "latest",
     "sourceType": "module"
   },
-  "plugins": ["react", "jsdoc"],
-  "rules": { "react/prop-types": 0 }
+  "plugins": ["react", "@typescript-eslint", "prettier"],
+  "settings": {
+    "import/parsers": { "@typescript-eslint/parser": [".ts", ".tsx"] },
+    "import/resolver": { "typescript": { "alwaysTryTypes": true } }
+  },
+  "rules": {}
 }
