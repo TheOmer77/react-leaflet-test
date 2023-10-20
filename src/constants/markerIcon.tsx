@@ -1,9 +1,9 @@
 import { divIcon } from 'leaflet';
 import { renderToStaticMarkup } from 'react-dom/server';
 
-import markerImage, {
-  ReactComponent as MarkerImage,
-} from '../assets/images/marker_image.svg';
+/* eslint-disable import/no-duplicates */
+import markerImage from '../assets/images/marker_image.svg';
+import MarkerImage from '../assets/images/marker_image.svg?react';
 
 export const ICON_OPTIONS = {
   iconUrl: markerImage,
